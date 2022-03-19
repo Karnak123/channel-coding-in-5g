@@ -15,4 +15,5 @@ module CBC
         end
 
         return a
+    end
 end
