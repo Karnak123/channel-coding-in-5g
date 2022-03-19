@@ -2,10 +2,12 @@ include("../encoder/cbs.jl")
 include("../encoder/crc.jl")
 include("../encoder/polar_encoder.jl")
 include("../encoder/rate_matching.jl")
+include("../encoder/cbc.jl")
 using .CBS
 using .CRC
 using .PolarEncoder
 using .RateMatching
+using .CBC
 using Base
 using Test
 
@@ -77,6 +79,22 @@ using Test
             K = E * 8 / 16
             y = rand((0, 1), N)
             @test rate_matching(y, N, E, K) == y[1:E]
+        end
+    end
+
+    @testset "Code Block Concatenation" begin
+        @testset "Equal blocks of size E" begin
+            a = [1 1 0 1 0 0 1]
+            b = [1 1 0 1 0 0 1]
+            E = 7
+            @test code_block_concatenator(a, b, E) == [1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1]
+        end
+
+        @testset "Block size E and E+1" begin
+            a = [1 1 0 1 0 0 1 1]
+            b = [1 1 0 1 0 0 1]
+            E = 7
+            @test code_block_concatenator(a, b, E) == [1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0]
         end
     end
 end
