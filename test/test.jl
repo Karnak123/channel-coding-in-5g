@@ -3,11 +3,13 @@ include("../encoder/crc.jl")
 include("../encoder/polar_encoder.jl")
 include("../encoder/rate_matching.jl")
 include("../encoder/cbc.jl")
+include("../encoder/ibl.jl")
 using .CBS
 using .CRC
 using .PolarEncoder
 using .RateMatching
 using .CBC
+using .IBL
 using Base
 using Test
 
@@ -95,6 +97,20 @@ using Test
             b = [1 1 0 1 0 0 1]
             E = 7
             @test code_block_concatenator(a, b, E) == [1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0]
+        end
+    end
+
+    @testset "Input Bit Interleaver" begin
+        @testset "Block <= 164" begin
+            K = 128
+            a = rand((0, 1), K)
+            @test length(bit_interleaver(a, K, PI_IL_Max)) == K
+        end
+
+        @testset "Block > 164" begin
+            K = 256
+            a = rand((0, 1), K)
+            @test length(bit_interleaver(a, K, PI_IL_Max)) == K
         end
     end
 end
