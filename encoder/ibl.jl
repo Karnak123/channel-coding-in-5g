@@ -1,5 +1,5 @@
 module IBL
-    export bit_interleaver
+    export bit_interleaver, PI_IL_Max, K_IL_Max
 
     K_IL_Max = 164
     PI_IL_Max = [0, 2, 4, 7, 9, 14, 19, 20, 24, 25, 26, 28,
@@ -17,15 +17,16 @@ module IBL
                 40, 146, 41, 147, 148, 149, 150, 151, 152, 153, 154, 155,
                 156, 157, 158, 159, 160, 161, 162, 163]
 
-    function bit_interleaver(c, K)
+    function bit_interleaver(c, K, PI_IL_Max)
         if typeof(c) == typeof([1 2])
             c = vec(c)
         end
 
         h = K_IL_Max - K
 
-        PI = filter((x) -> x + 1 > h, PI_IL_Max)
-        PI = map((x) -> x - h + 1, PI)
+        PI_IL_Max = map((x) -> x+1, PI_IL_Max)
+        PI = filter((x) -> x > h, PI_IL_Max)
+        PI = map((x) -> x - h, PI)
 
         c_prime = map(x -> x, c)
         for i in 1:length(PI)
