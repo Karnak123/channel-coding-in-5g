@@ -4,12 +4,14 @@ include("../encoder/polar_encoder.jl")
 include("../encoder/rate_matching.jl")
 include("../encoder/cbc.jl")
 include("../encoder/ibl.jl")
+include("../encoder/ci.jl")
 using .CBS
 using .CRC
 using .PolarEncoder
 using .RateMatching
 using .CBC
 using .IBL
+using .CI
 using Base
 using Test
 
@@ -112,5 +114,11 @@ using Test
             a = rand((0, 1), K)
             @test length(bit_interleaver(a, K, PI_IL_Max)) == K
         end
+    end
+
+    @testset "Channel Interleaver" begin
+        E = 164
+        e = rand((0, 1), E)
+        @test length(channel_interleaver(e, E)) == E
     end
 end
