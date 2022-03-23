@@ -3,7 +3,6 @@ module CBS
 
     function code_block_segmentor(a, A, G)
         if (A >= 1013 || (A >= 360 && G >= 1088))
-            A_prime = ceil(Int, A / 2)
             if (A % 2 == 1)
                 msg1 = [0]
                 append!(msg1, a[1:floor(Int, A/2)])
