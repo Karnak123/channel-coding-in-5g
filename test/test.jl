@@ -5,6 +5,7 @@ include("../encoder/rate_matching.jl")
 include("../encoder/cbc.jl")
 include("../encoder/ibl.jl")
 include("../encoder/ci.jl")
+include("../encoder/sbi.jl")
 using .CBS
 using .CRC
 using .PolarEncoder
@@ -12,6 +13,7 @@ using .RateMatching
 using .CBC
 using .IBL
 using .CI
+using .SBI
 using Base
 using Test
 
@@ -120,5 +122,13 @@ using Test
         E = 164
         e = rand((0, 1), E)
         @test length(channel_interleaver(e, E)) == E
+    end
+
+    @testset "Sub Block Interleaver" begin
+        N = 2^rand(5:10)
+        d = rand((0, 1), N)
+        y = sub_block_interleaver(d, N)
+        @test length(y) == N
+        @test d!=y
     end
 end
